@@ -1,9 +1,10 @@
-CREATE TABLE Student (
-    StudentID int NOT NULL,
+CREATE TABLE User (
+    UserID int NOT NULL,
     Firstname varchar(255),
     Lastname varchar(255),
     ClassID int,
-    PRIMARY KEY (StudentID),
+	isAdmin boolean,
+    PRIMARY KEY (UserID),
     FOREIGN KEY (ClassID) REFERENCES "Class"(ClassID)
 );
 
@@ -21,20 +22,11 @@ CREATE TABLE Course (
 
 CREATE TABLE Enrolment (
     EnrolmentID int NOT NULL,
-	StudentID int,
+	UserID int,
 	CourseID int,
 	PRIMARY KEY (EnrolmentID),
-	FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+	FOREIGN KEY (UserID) REFERENCES User(UserID),
 	FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
-);
-
-CREATE TABLE Teacher (
-    TeacherID int NOT NULL,
-    Firstname varchar(255),
-    Lastname varchar(255),
-	ClassID int,
-	PRIMARY KEY (TeacherID),
-	FOREIGN KEY (ClassID) REFERENCES "Class"(ClassID)
 );
 
 CREATE TABLE Requirement (
@@ -50,40 +42,41 @@ CREATE TABLE Task (
 	Difficulty varchar(255),
 	ImageURL varchar(255),
 	CourseID int,
-	TeacherID int,
+	UserID int,
 	RequirementID int,
 	PRIMARY KEY (TaskID),
 	FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
-	FOREIGN KEY (TeacherID) REFERENCES Teacher(TeacherID),
+	FOREIGN KEY (UserID) REFERENCES User(UserID),
 	FOREIGN KEY (RequirementID) REFERENCES Requirement(RequirementID)
 );	
 
 CREATE TABLE Recommended (
     RecommendedID int NOT NULL,
-	StudentID int,
+	UserID int,
 	TaskID int,
 	PRIMARY KEY (RecommendedID),
-	FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+	FOREIGN KEY (UserID) REFERENCES User(UserID),
 	FOREIGN KEY (TaskID) REFERENCES Task(TaskID)
 );
 
 CREATE TABLE Error (
     ErrorID int NOT NULL,
 	TaskID int,
-	StudentID int,
+	UserID int,
 	Submittedcode varchar(1000),
 	"Output" varchar(255),
 	Feedback varchar(255),
 	PRIMARY KEY (ErrorID),
 	FOREIGN KEY (TaskID) REFERENCES Task(TaskID),
-	FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
+	FOREIGN KEY (UserID) REFERENCES User(UserID)
 );
 
 CREATE TABLE Configuration (
     ConfigurationID int NOT NULL,
-	StudentID int,
-	Settings varchar(1000),
+	UserID int,
+	Darkmode boolean,
+	Autosave boolean,
 	PRIMARY KEY (ConfigurationID),
-	FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
+	FOREIGN KEY (UserID) REFERENCES User(UserID)
 );
 
