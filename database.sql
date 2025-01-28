@@ -79,3 +79,11 @@ CREATE TABLE Error (
 	FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
 );
 
+CREATE TABLE Configuration (
+    ConfigurationID int NOT NULL,
+	StudentID int,
+	Settings varchar(1000),
+	PRIMARY KEY (ConfigurationID),
+	FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
+);
+
