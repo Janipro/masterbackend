@@ -3,7 +3,7 @@ CREATE TABLE User (
     Firstname varchar(255),
     Lastname varchar(255),
     ClassID int,
-	isAdmin boolean,
+	IsADMIN boolean,
     PRIMARY KEY (UserID),
     FOREIGN KEY (ClassID) REFERENCES "Class"(ClassID)
 );
