@@ -10,13 +10,13 @@ CREATE TABLE User (
 
 CREATE TABLE "Class" (
     ClassID int NOT NULL,
-    Name varchar(255),
+    Classname varchar(255),
     PRIMARY KEY (ClassID),
 );
 
 CREATE TABLE Course (
     CourseID int NOT NULL,
-    Name varchar(255),
+    Coursename varchar(255),
     PRIMARY KEY (CourseID),
 );
 
@@ -31,14 +31,14 @@ CREATE TABLE Enrolment (
 
 CREATE TABLE Requirement (
     RequirementID int NOT NULL,
-	Name varchar(255),
+	Requirementname varchar(255),
 	PRIMARY KEY (RequirementID)
 );
 
 CREATE TABLE Task (
     TaskID int NOT NULL,
-	Name varchar(255),
-	Description varchar(255),
+	Taskname varchar(255),
+	Taskdescription varchar(255),
 	Difficulty varchar(255),
 	ImageURL varchar(255),
 	CourseID int,
@@ -59,14 +59,15 @@ CREATE TABLE Recommended (
 	FOREIGN KEY (TaskID) REFERENCES Task(TaskID)
 );
 
-CREATE TABLE Error (
-    ErrorID int NOT NULL,
+CREATE TABLE Submission (
+    SubmissionID int NOT NULL,
 	TaskID int,
 	UserID int,
 	Submittedcode varchar(1000),
-	"Output" varchar(255),
+	Codeoutput varchar(255),
 	Feedback varchar(255),
-	PRIMARY KEY (ErrorID),
+	IsCORRECT boolean,
+	PRIMARY KEY (SubmissionID),
 	FOREIGN KEY (TaskID) REFERENCES Task(TaskID),
 	FOREIGN KEY (UserID) REFERENCES User(UserID)
 );
