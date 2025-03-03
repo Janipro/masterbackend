@@ -135,3 +135,39 @@ CREATE TABLE Settings (
 	FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
+CREATE TABLE Announcement (
+	announcement_id int NOT NULL,
+	study_group_id int,
+	user_id int,
+	title varchar(100),
+	content text,
+	date_published Date,
+	PRIMARY KEY (announcement_id),
+	FOREIGN KEY (study_group_id) REFERENCES StudyGroup(study_group_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+CREATE TABLE SubmissionHistory (
+	submission_history_id int NOT NULL,
+	task_id int,
+	user_id int,
+	submitted_code text,
+	created_at Date,
+	passed boolean,
+	PRIMARY KEY (submission_history_id),
+	FOREIGN KEY (task_id) REFERENCES Task(task_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+CREATE TYPE task_status AS ENUM('not_started', 'in_progress', 'completed');
+CREATE TABLE TaskStatus (
+	task_status_id int NOT NULL,
+	user_id int,
+	task_id int,
+	last_updated Date,
+	"status" task_status,
+	PRIMARY KEY (task_status_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id),
+	FOREIGN KEY (task_id) REFERENCES Task(task_id)
+);
+
