@@ -1,83 +1,137 @@
 CREATE TABLE User (
-    UserID int NOT NULL,
-    Firstname varchar(255),
-    Lastname varchar(255),
-    ClassID int,
-	IsADMIN boolean,
-    PRIMARY KEY (UserID),
-    FOREIGN KEY (ClassID) REFERENCES "Class"(ClassID)
+    user_id int NOT NULL,
+    firstname varchar(255),
+    lastname varchar(255),
+    class_id int,
+	school_id int,
+	is_admin boolean,
+	email varchar(255),
+	password_hash text,
+	created_at Date,
+    PRIMARY KEY (user_id),
+    FOREIGN KEY (class_id) REFERENCES "Class"(class_id)
+	FOREIGN KEY (school_id) REFERENCES School(school_id)
 );
 
 CREATE TABLE "Class" (
-    ClassID int NOT NULL,
-    Classname varchar(255),
-    PRIMARY KEY (ClassID),
+    class_id int NOT NULL,
+    grade int,
+	class_name varchar(10),
+    PRIMARY KEY (class_id)
+);
+
+CREATE TABLE School (
+	school_id int NOT NULL,
+	school_name varchar(255),
+	PRIMARY KEY (school_id)
 );
 
 CREATE TABLE Course (
-    CourseID int NOT NULL,
-    Coursename varchar(255),
-    PRIMARY KEY (CourseID),
+    course_id int NOT NULL,
+    course_name varchar(255),
+    PRIMARY KEY (course_id)
+);
+
+CREATE TABLE StudyGroup (
+	study_group_id int NOT NULL,
+	course_id int,
+	school_id int,
+	study_group_name varchar(255),
+	"description" varchar(255),
+	user_id int,
+	is_active boolean,
+	PRIMARY KEY (study_group_id),
+	FOREIGN KEY (course_id) REFERENCES Course(course_id),
+	FOREIGN KEY (school_id) REFERENCES School(school_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
 CREATE TABLE Enrolment (
-    EnrolmentID int NOT NULL,
-	UserID int,
-	CourseID int,
-	PRIMARY KEY (EnrolmentID),
-	FOREIGN KEY (UserID) REFERENCES User(UserID),
-	FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    enrolment_id int NOT NULL,
+	user_id int,
+	study_group_id int,
+	PRIMARY KEY (enrolment_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id),
+	FOREIGN KEY (study_group_id) REFERENCES StudyGroup(study_group_id)
 );
 
+CREATE TABLE Access (
+	access_id int NOT NULL,
+	user_id int,
+	study_group_id int,
+	PRIMARY KEY (access_id),
+	FOREIGN KEY (user_id) REFERENCES user(user_id),
+	FOREIGN KEY (study_group_id) REFERENCES StudyGroup(study_group_id)
+)
+
 CREATE TABLE Requirement (
-    RequirementID int NOT NULL,
-	Requirementname varchar(255),
-	PRIMARY KEY (RequirementID)
+    requrement_id int NOT NULL,
+	requrement_name varchar(255),
+	PRIMARY KEY (requrement_id)
 );
 
 CREATE TABLE Task (
-    TaskID int NOT NULL,
-	Taskname varchar(255),
-	Taskdescription varchar(255),
-	Difficulty varchar(255),
+    task_id int NOT NULL,
+	task_name varchar(255),
+	task_description varchar(255),
+	expected_code text,
+	expected_output text,
+	difficulty varchar(255),
 	ImageURL varchar(255),
-	CourseID int,
-	UserID int,
-	RequirementID int,
-	PRIMARY KEY (TaskID),
-	FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
-	FOREIGN KEY (UserID) REFERENCES User(UserID),
-	FOREIGN KEY (RequirementID) REFERENCES Requirement(RequirementID)
+	course_id int,
+	user_id int,
+	public_access boolean,
+	image_url text,
+	PRIMARY KEY (task_id),
+	FOREIGN KEY (course_id) REFERENCES Course(Courcourse_idseID),
+	FOREIGN KEY (user_id) REFERENCES User(user_id),
 );	
 
+CREATE TABLE TaskRequirement (
+	task_requirement_id int NOT NULL,
+	task_id int,
+	requirement_id int,
+	PRIMARY KEY (task_requirement_id),
+	FOREIGN KEY (task_id) REFERENCES Task(task_id),
+	FOREIGN KEY (requirement_id) REFERENCES Requirement(requirement_id)
+);
+
 CREATE TABLE Recommended (
-    RecommendedID int NOT NULL,
+    recommended_id int NOT NULL,
 	UserID int,
-	TaskID int,
+	task_id int,
 	PRIMARY KEY (RecommendedID),
 	FOREIGN KEY (UserID) REFERENCES User(UserID),
 	FOREIGN KEY (TaskID) REFERENCES Task(TaskID)
 );
 
 CREATE TABLE Submission (
-    SubmissionID int NOT NULL,
-	TaskID int,
-	UserID int,
-	Submittedcode varchar(1000),
-	Codeoutput varchar(255),
-	Feedback varchar(255),
-	IsCORRECT boolean,
-	PRIMARY KEY (SubmissionID),
-	FOREIGN KEY (TaskID) REFERENCES Task(TaskID),
-	FOREIGN KEY (UserID) REFERENCES User(UserID)
+    submission_id int NOT NULL,
+	task_id int,
+	user_id int,
+	submitted_code text,
+	generated_output varchar(255),
+	gpt_feedback text,
+	PRIMARY KEY (submission_id),
+	FOREIGN KEY (task_id) REFERENCES Task(task_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
-CREATE TABLE Configuration (
-    ConfigurationID int NOT NULL,
-	UserID int,
-	Darkmode boolean,
-	Autosave boolean,
-	PRIMARY KEY (ConfigurationID),
-	FOREIGN KEY (UserID) REFERENCES User(UserID)
+CREATE TABLE Favorite (
+	favorite_id int NOT NULL,
+	task_id int,
+	user_id int,
+	PRIMARY KEY (favorite_id),
+	FOREIGN KEY (task_id) REFERENCES Task(task_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+CREATE TABLE Settings (
+    settings_id int NOT NULL,
+	user_id int,
+	editor_theme_dark boolean,
+	theme_dark boolean,
+	PRIMARY KEY (settings_id),
+	FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
