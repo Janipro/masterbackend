@@ -1,16 +1,7 @@
-CREATE TABLE User (
-    user_id int NOT NULL,
-    firstname varchar(255),
-    lastname varchar(255),
-    class_id int,
-	school_id int,
-	is_admin boolean,
-	email varchar(255),
-	password_hash text,
-	created_at Date,
-    PRIMARY KEY (user_id),
-    FOREIGN KEY (class_id) REFERENCES "Class"(class_id)
-	FOREIGN KEY (school_id) REFERENCES School(school_id)
+CREATE TABLE Requirement (
+    requirement_id int NOT NULL,
+	requirement_name varchar(255),
+	PRIMARY KEY (requirement_id)
 );
 
 CREATE TABLE "Class" (
@@ -32,6 +23,21 @@ CREATE TABLE Course (
     PRIMARY KEY (course_id)
 );
 
+CREATE TABLE "User" (
+    user_id int NOT NULL,
+    firstname varchar(255),
+    lastname varchar(255),
+    class_id int,
+	school_id int,
+	is_admin boolean,
+	email varchar(255),
+	password_hash text,
+	created_at Date,
+    PRIMARY KEY (user_id),
+    FOREIGN KEY (class_id) REFERENCES "Class"(class_id),
+	FOREIGN KEY (school_id) REFERENCES School(school_id)
+);
+
 CREATE TABLE StudyGroup (
 	study_group_id int NOT NULL,
 	course_id int,
@@ -43,7 +49,7 @@ CREATE TABLE StudyGroup (
 	PRIMARY KEY (study_group_id),
 	FOREIGN KEY (course_id) REFERENCES Course(course_id),
 	FOREIGN KEY (school_id) REFERENCES School(school_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id)
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
 
 CREATE TABLE Enrolment (
@@ -51,23 +57,17 @@ CREATE TABLE Enrolment (
 	user_id int,
 	study_group_id int,
 	PRIMARY KEY (enrolment_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id),
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id),
 	FOREIGN KEY (study_group_id) REFERENCES StudyGroup(study_group_id)
 );
 
-CREATE TABLE Access (
+CREATE TABLE "Access" (
 	access_id int NOT NULL,
 	user_id int,
 	study_group_id int,
 	PRIMARY KEY (access_id),
-	FOREIGN KEY (user_id) REFERENCES user(user_id),
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id),
 	FOREIGN KEY (study_group_id) REFERENCES StudyGroup(study_group_id)
-)
-
-CREATE TABLE Requirement (
-    requrement_id int NOT NULL,
-	requrement_name varchar(255),
-	PRIMARY KEY (requrement_id)
 );
 
 CREATE TABLE Task (
@@ -83,8 +83,8 @@ CREATE TABLE Task (
 	public_access boolean,
 	image_url text,
 	PRIMARY KEY (task_id),
-	FOREIGN KEY (course_id) REFERENCES Course(Courcourse_idseID),
-	FOREIGN KEY (user_id) REFERENCES User(user_id),
+	FOREIGN KEY (course_id) REFERENCES Course(course_id),
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );	
 
 CREATE TABLE TaskRequirement (
@@ -98,11 +98,11 @@ CREATE TABLE TaskRequirement (
 
 CREATE TABLE Recommended (
     recommended_id int NOT NULL,
-	UserID int,
+	user_id int,
 	task_id int,
-	PRIMARY KEY (RecommendedID),
-	FOREIGN KEY (UserID) REFERENCES User(UserID),
-	FOREIGN KEY (TaskID) REFERENCES Task(TaskID)
+	PRIMARY KEY (recommended_id),
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id),
+	FOREIGN KEY (task_id) REFERENCES Task(task_id)
 );
 
 CREATE TABLE Submission (
@@ -114,7 +114,7 @@ CREATE TABLE Submission (
 	gpt_feedback text,
 	PRIMARY KEY (submission_id),
 	FOREIGN KEY (task_id) REFERENCES Task(task_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id)
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
 
 CREATE TABLE Favorite (
@@ -123,7 +123,7 @@ CREATE TABLE Favorite (
 	user_id int,
 	PRIMARY KEY (favorite_id),
 	FOREIGN KEY (task_id) REFERENCES Task(task_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id)
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
 
 CREATE TABLE Settings (
@@ -132,7 +132,7 @@ CREATE TABLE Settings (
 	editor_theme_dark boolean,
 	theme_dark boolean,
 	PRIMARY KEY (settings_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id)
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
 
 CREATE TABLE Announcement (
@@ -144,7 +144,7 @@ CREATE TABLE Announcement (
 	date_published Date,
 	PRIMARY KEY (announcement_id),
 	FOREIGN KEY (study_group_id) REFERENCES StudyGroup(study_group_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id)
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
 
 CREATE TABLE SubmissionHistory (
@@ -156,7 +156,7 @@ CREATE TABLE SubmissionHistory (
 	passed boolean,
 	PRIMARY KEY (submission_history_id),
 	FOREIGN KEY (task_id) REFERENCES Task(task_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id)
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
 );
 
 CREATE TYPE task_status AS ENUM('not_started', 'in_progress', 'completed');
@@ -167,7 +167,7 @@ CREATE TABLE TaskStatus (
 	last_updated Date,
 	"status" task_status,
 	PRIMARY KEY (task_status_id),
-	FOREIGN KEY (user_id) REFERENCES User(user_id),
+	FOREIGN KEY (user_id) REFERENCES "User"(user_id),
 	FOREIGN KEY (task_id) REFERENCES Task(task_id)
 );
 
