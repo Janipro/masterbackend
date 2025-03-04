@@ -61,7 +61,7 @@ CREATE TABLE Enrolments (
 	FOREIGN KEY (study_group_id) REFERENCES StudyGroups(study_group_id)
 );
 
-CREATE TABLE Access (
+CREATE TABLE "Access" (
 	access_id int NOT NULL,
 	user_id int,
 	study_group_id int,
