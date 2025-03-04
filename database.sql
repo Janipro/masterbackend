@@ -77,11 +77,11 @@ CREATE TABLE Task (
 	expected_code text,
 	expected_output text,
 	difficulty varchar(255),
-	ImageURL varchar(255),
 	course_id int,
 	user_id int,
 	public_access boolean,
 	image_url text,
+	is_active boolean,
 	PRIMARY KEY (task_id),
 	FOREIGN KEY (course_id) REFERENCES Course(course_id),
 	FOREIGN KEY (user_id) REFERENCES "User"(user_id)
