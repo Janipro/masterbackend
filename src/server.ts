@@ -1,8 +1,8 @@
 import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
 import { postgraphile } from "postgraphile";
 import ConnectionFilterPlugin from "postgraphile-plugin-connection-filter";
+import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 const app = express();
