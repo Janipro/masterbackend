@@ -39,7 +39,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE StudyGroups (
-	study_group_id int NOT NULL,
+	study_group_id SERIAL int NOT NULL,
 	course_id int,
 	school_id int,
 	study_group_name varchar(255),
