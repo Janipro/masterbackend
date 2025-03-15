@@ -78,6 +78,7 @@ CREATE TABLE Tasks (
 	expected_output text,
 	difficulty varchar(255),
 	"level" varchar(50),
+	"type" varchar(50),
 	course_id int,
 	user_id int,
 	public_access boolean,
