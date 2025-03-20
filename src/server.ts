@@ -3,10 +3,15 @@ import { postgraphile } from "postgraphile";
 import ConnectionFilterPlugin from "postgraphile-plugin-connection-filter";
 import dotenv from "dotenv";
 import cors from "cors";
+import pg from "pg";
+const { Pool } = pg;
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 app.use(
   cors({
@@ -34,17 +39,41 @@ app.post("/execute", async (req, res) => {
   }
 
   try {
-    const response = await fetch("https://python-runner-879157704586.europe-north1.run.app/run", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
-    });
+    const response = await fetch(
+      "https://python-runner-879157704586.europe-north1.run.app/run",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      }
+    );
 
     const data = await response.json();
     return res.json(data);
   } catch (error) {
     console.error("Execution Error:", error);
     return res.status(500).json({ error: "Failed to execute code" });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  const { user } = req.body;
+
+  if (!user) {
+    return res.status(400).json({ error: "No user provided" });
+  }
+
+  try {
+    const response = await pool.query(
+      "SELECT * FROM users WHERE email = $1 AND password_hash = $2",
+      [user.email, user.password]
+    );
+
+    const data = response.rows;
+    return res.json(data);
+  } catch (error) {
+    console.error("Execution Error:", error);
+    return res.status(500).json({ error: "Failed to login" });
   }
 });
 
