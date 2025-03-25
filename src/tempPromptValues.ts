@@ -1,7 +1,6 @@
-export const taskTitle = 'Beregn arealet av flere trekanter';
+export const taskTitle = "Beregn arealet av flere trekanter";
 
-export const taskDescription = 
-    `
+export const taskDescription = `
     Lag et Python-program som regner ut arealet av fem trekanter. Du skal bruke en liste med grunnlinje og høyde for hver trekant.
 
     For hver trekant i listen, beregn arealet med formelen:
@@ -26,14 +25,13 @@ export const taskDescription =
     Grunnlinje = 8, Høyde = 10
     Grunnlinje = 15, Høyde = 6
     Grunnlinje = 6, Høyde = 8
-    `; 
+    `;
 
-    export const themes = ['if-setning' , 'for-løkke']; 
+export const themes = ["if-setning", "for-løkke"];
 
-    export const studentLevel = 'VG2';
+export const studentLevel = "VG2";
 
-    export const codeSolution = 
-    `
+export const codeSolution = `
     trekanter = [
         [10, 7],
         [12, 9],
@@ -50,15 +48,14 @@ export const taskDescription =
         print(f"Arealet av trekanten er: {areal}")
 
         if areal > 50:
-        print("Stor trekant!")
+            print("Stor trekant!")
     `;
 
-    export const expectedOutput = 
-    `
+export const expectedOutput = `
     Arealet av trekanten er: 35.0
     Arealet av trekanten er: 54.0
     Stor trekant!
     Arealet av trekanten er: 40.0
     Arealet av trekanten er: 45.0
     Arealet av trekanten er: 24.0
-    `; 
+    `;
