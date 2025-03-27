@@ -36,7 +36,7 @@ app.use(
 
 app.use(
   postgraphile(process.env.DATABASE_URL, "public", {
-    watchPg: true,
+    watchPg: false, //set to false when using the session poole connection. Direct connection which works with watchpg requires ipv4 (costs money). db changes wont show in graphql api unless restarting the node server
     graphiql: true,
     enhanceGraphiql: true,
     appendPlugins: [ConnectionFilterPlugin],
