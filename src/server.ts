@@ -24,10 +24,6 @@ app.use(express.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
-  allowExitOnIdle: true,
-  max: 50,
 });
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -47,11 +43,6 @@ app.use(
     graphileBuildOptions: {
       connectionFilterRelations: true,
     },
-    pgSettings: async () => ({
-      statement_timeout: "5000",
-      lock_timeout: "5000",
-      idle_in_transaction_session_timeout: "5000",
-    }),
   })
 );
 
