@@ -113,7 +113,7 @@ CREATE TABLE Recommended (
     user_id INT NOT NULL,
     study_group_id INT NOT NULL,
     type recommended_type NOT NULL,
-    deadline TIMESTAMP NOT NULL,
+    deadline TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (task_id) REFERENCES Tasks(task_id),
