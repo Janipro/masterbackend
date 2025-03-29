@@ -27,7 +27,7 @@ const pool = new Pool({
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
   allowExitOnIdle: true,
-  max: 30,
+  max: 50,
 });
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
