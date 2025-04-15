@@ -46,7 +46,8 @@ const buildPrompt = ({ taskTitle, taskDescription, requirements, level, expected
     - Hvis koden gir korrekt output, så påpek at oppgaven er løst og deretter foreslå hvordan eleven kan forbedre løsningen hvis det er noen åpenbare forbedringer.
     - Inkluder maksimum 2 oppmuntrende setninger som ikke direkte referer til noe i elevens koden.
     - Hvis tilbakemeldingen inneholder matematiske formler, skal disse skrives slik man normalt ville skrevet dem for hånd — altså med tall, bokstaver, operatorer og parenteser. Unngå bruk av LaTeX-formattering, innebygde funksjoner eller spesialkoder som \frac{}. Eksempel på uønsket format: \( \frac{1}{2} \times \text{base} \times \text{høyde} \). Eksempel på ønsket format: (1/2) * base * høyde.
-    
+    - Hvis Elevens output er den samme som forventet output, men det er noen ubetydelige forskjeller i formatering eller stavelse, så gi eleven hint om hvordan eleven kan få riktig output. Sammenligningen av ouputs gjøres med små bokstaver og uten ledende eller etterfølgende mellomrom.
+
     Svar på norsk.
     `;
 };

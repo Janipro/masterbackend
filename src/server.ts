@@ -18,6 +18,11 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
+// To avoid server crashing on disconnect
+pool.on('error', (err) => {
+  console.error('Unexpected PostgreSQL error on idle client:', err);
+});
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.use(
@@ -27,7 +32,7 @@ app.use(
 );
 
 app.use(
-  postgraphile(process.env.DATABASE_URL, "public", {
+  postgraphile(pool, "public", {
     watchPg: false, //set to false when using the session poole connection. Direct connection which works with watchpg requires ipv4 (costs money). db changes wont show in graphql api unless restarting the node server
     graphiql: true,
     enhanceGraphiql: true,
@@ -144,7 +149,7 @@ app.post("/help", async (req, res) => {
     );
 
     const data = await response.json();
-    userCodeOutput = data;
+    userCodeOutput = data.output;
   } catch (error) {
     console.error("Execution Error:", error);
     return res.status(500).json({ error: "Failed to execute code" });
@@ -241,6 +246,100 @@ app.post("/help", async (req, res) => {
     console.error(error);
     return res.status(500).json({ error: "Error generating AI help" });
   }
+});
+
+app.post("/submit", async (req, res) => {
+  const { code, taskId } = req.body;
+
+  type Task = {
+    task_id: number;
+    task_name: string;
+    task_description: string;
+    expected_code: string;
+    expected_output: string;
+    code_template: string;
+    difficulty: string;
+    level: string;
+    type: string;
+    course_id: number;
+    user_id: number;
+    public_access: boolean;
+    image_url: string;
+    is_active: boolean;
+    codeTemplate?: string;
+  };
+
+
+  let userCodeOutput = "";
+  let task: Task;
+
+  if (!code) {
+    return res.status(400).json({ error: "No code provided" });
+  }
+
+  if (!taskId) {
+    return res.status(400).json({ error: "No task provided" });
+  }
+
+  try {
+    const response = await fetch(
+      "https://python-runner-879157704586.europe-north1.run.app/run",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      }
+    );
+
+    const data = await response.json();
+    userCodeOutput = data.output;
+  } catch (error) {
+    console.error("Execution Error:", error);
+    return res.status(500).json({ error: "Failed to execute code" });
+  }
+
+
+  try {
+    const taskResult = await pool.query(
+      'SELECT * FROM tasks WHERE task_id = $1',
+      [taskId]
+    );
+    
+    if (taskResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    
+    task = taskResult.rows[0];
+
+    } catch (error) {
+      console.error('Failed to fetch task:', error);
+      return res.status(500).json({ error: 'Error fetching task' });
+    }
+
+  if (
+    !task.expected_output
+  ) {
+    return res
+      .status(400)
+      .json({ error: "Missing expected output." });
+  }
+
+  // needs a mopre advanced comparison, maybe use ai as well? This will fail to check correctly for tasks that depends on spaces, like:
+  // print this with foor loops:
+  //   *
+  //  ***
+  // *****
+  // because of trim()
+  const normalize = (str: string) =>
+    str
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/\r\n|\r/g, '\n')
+      .replace(/\s+$/gm, '')
+  const isCorrect = normalize(userCodeOutput) == normalize(task.expected_output);
+
+  return res.json({ message: isCorrect? 'Outputen samsvarer med fasiten. Oppgaven er løst. Bra jobba!' : 'Outputen samsvarer ikke med fasiten. Oppgaven er ikke løst.', isSolved: isCorrect});
 });
 
 const PORT: number = Number(process.env.PORT || 6001);
